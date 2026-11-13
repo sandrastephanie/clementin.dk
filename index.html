@@ -652,6 +652,8 @@
   ];
   if(!Array.isArray(mem.unlocked)) mem.unlocked=['klassisk'];
   function isOpen(id){return mem.unlocked.indexOf(id)>-1;}
+  /* unlocks go in order: only the first locked clementine can be won next */
+  function nextSkin(){for(var i=0;i<SKINS.length;i++)if(!isOpen(SKINS[i].id))return SKINS[i];return null;}
   if(!isOpen(mem.skin)) mem.skin='klassisk';
 
   $('heroClem').insertAdjacentHTML('beforeend',clemSVG('fixed','klassisk',false));
@@ -779,12 +781,12 @@
   function renderSkins(){
     var box=$('skins'); box.innerHTML='';
     SKINS.forEach(function(s){
-      var open=isOpen(s.id);
+      var open=isOpen(s.id), nx=nextSkin(), isNext=nx&&nx.id===s.id;
       var b=document.createElement('button');
       b.className="skin-btn"; b.dataset.id=s.id; b.disabled=!open;
       b.setAttribute('aria-pressed',s.id===mem.skin?'true':'false');
-      b.setAttribute('aria-label',open?('Vælg '+s.name):('Låst. '+s.hint+' for at låse op.'));
-      b.innerHTML=clemSVG('mini',s.id,false)+'<b>'+(open?s.name:'???')+'</b><small>'+(open?'låst op':s.hint)+'</small>';
+      b.setAttribute('aria-label',open?('Vælg '+s.name):isNext?('Næste: '+s.hint+' for at låse op.'):'Låst.');
+      b.innerHTML=clemSVG('mini',s.id,false)+'<b>'+(open?s.name:'???')+'</b><small>'+(open?'låst op':isNext?s.hint:'låst')+'</small>';
       b.addEventListener('click',function(){mem.skin=s.id;save();applySkin();});
       box.appendChild(b);
     });
@@ -866,7 +868,8 @@
     run.streak = (run.lastMs && ms<run.lastMs) ? run.streak+1 : 1; run.lastMs=ms;
     if(!mem.fast||ms<mem.fast) mem.fast=ms;
     var ctx={score:run.score,ms:ms,streak:run.streak}, fresh=[];
-    SKINS.forEach(function(s){ if(!isOpen(s.id)&&s.test(ctx)){mem.unlocked.push(s.id);fresh.push(s);} });
+    var nx=nextSkin();
+    while(nx&&nx.test(ctx)){mem.unlocked.push(nx.id);fresh.push(nx);nx=nextSkin();}
     save();
     var msg=secs(ms)+' sek.';
     if(run.streak>=2) msg+=' '+run.streak+' i træk, hurtigere og hurtigere.';
