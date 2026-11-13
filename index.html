@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Elsker du også clementiner?</title>
 <meta name="description" content="En hjemmeside om clementiner. Det er det. Der kommer ikke mere.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clementin.dk/">
+<meta property="og:title" content="Elsker du også clementiner?">
+<meta property="og:description" content="En hjemmeside om clementiner. Skræl en, tag quizzen, lær alt for meget.">
+<meta property="og:locale" content="da_DK">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='14.5' r='8.5' fill='%23F07F1A'/%3E%3Cpath d='M12 6.5q4-3 7.5-1q-2.2 4.2-7.5 1z' fill='%233F7D4E'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -14,11 +20,12 @@
     --paper:#F6F0E4; --panel:#EDE3D0; --card:#FFFCF6;
     --ink:#241F18; --muted:#857A69; --line:#E2D8C5;
     --orange:#F07F1A; --orange-d:#D86A0C; --flesh:#FBB264; --leaf:#3F7D4E;
+    --gold:#E9B949; --gold-d:#B8862B; --unripe:#8DB255; --unripe-d:#5F8A3A; --red:#D7372F;
     --font:'Schibsted Grotesk',system-ui,-apple-system,sans-serif;
 
     /* ---- type scale (base 18px) ---- */
     --t-label:.8rem; --t-small:.9rem; --t-body:1rem; --t-lead:1.25rem;
-    --t-h2:1.75rem; --t-display:clamp(2.4rem,7vw,3.4rem); --t-mega:clamp(2.75rem,13vw,4.5rem);
+    --t-h2:clamp(1.6rem,3.2vw,2.1rem); --t-display:clamp(2.5rem,6.4vw,4.4rem); --t-mega:clamp(2.75rem,10vw,4.5rem);
 
     /* ---- weight ---- */
     --w-body:400; --w-med:500; --w-bold:700; --w-black:800; --w-display:900;
@@ -27,62 +34,219 @@
     --s-1:.5rem; --s-2:1rem; --s-3:1.5rem; --s-4:2rem; --s-5:3rem; --s-6:4.75rem; --s-7:6rem;
 
     /* ---- radius ---- */
-    --r-sm:6px; --r-md:10px;
+    --r-sm:6px; --r-md:10px; --r-lg:16px;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html{scroll-behavior:smooth}
   body{margin:0;font-family:var(--font);color:var(--ink);background:var(--paper);
     font-size:18px;line-height:1.65;font-weight:var(--w-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  .wrap{max-width:640px;margin:0 auto;padding:0 var(--s-3)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 var(--s-3)}
   p{margin:0}
+  a{color:inherit}
+  button{font-family:var(--font)}
 
-  /* hero */
-  header{padding:var(--s-7) 0 var(--s-5);text-align:center}
-  .mascot{width:104px;height:auto;display:block;margin:0 auto var(--s-3)}
-  h1{font-weight:var(--w-display);font-size:var(--t-display);line-height:1.05;letter-spacing:-.02em;margin:0}
+
+  /* ---- hero ---- */
+  .hero{padding:var(--s-6) 0 var(--s-5);text-align:center}
+  .hero-in{display:flex;flex-direction:column-reverse;align-items:center;gap:var(--s-3)}
+  h1{font-weight:var(--w-display);font-size:var(--t-display);line-height:1.02;letter-spacing:-.025em;margin:0}
   .sub{font-weight:var(--w-med);color:var(--muted);font-size:var(--t-lead);margin:var(--s-2) 0 0}
-  .intro{max-width:500px;margin:var(--s-3) auto 0;color:var(--muted);font-size:var(--t-body)}
+  .intro{max-width:520px;margin:var(--s-3) auto 0;color:var(--muted);font-size:var(--t-body)}
+  .welcome{display:inline-block;margin:var(--s-3) 0 0;padding:10px 16px;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r-md);font-weight:var(--w-med);font-size:var(--t-small)}
+  .hero-cta{display:flex;gap:var(--s-2);justify-content:center;flex-wrap:wrap;margin-top:var(--s-4)}
+  .hero-art{position:relative}
+  .hero-clem-btn{background:none;border:none;padding:0;cursor:pointer;display:block;position:relative;-webkit-tap-highlight-color:transparent}
+  .hero-clem-btn .clem{width:min(42vw,170px);height:auto;display:block;animation:bob 4.2s ease-in-out infinite}
+  .hero-clem-btn.squish .clem{animation:squish .45s ease}
+  .bubble{position:absolute;left:50%;top:-14px;transform:translate(-50%,-100%) scale(.8);opacity:0;pointer-events:none;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:8px 14px;white-space:nowrap;
+    font-weight:var(--w-bold);font-size:var(--t-small);transition:opacity .2s,transform .2s;box-shadow:0 6px 18px rgba(36,31,24,.08)}
+  .bubble::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;background:var(--card);
+    border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+  .bubble.show{opacity:1;transform:translate(-50%,-100%) scale(1)}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+  @keyframes squish{30%{transform:scale(1.12,.86)}60%{transform:scale(.94,1.08)}}
+  @media(min-width:860px){
+    .hero{padding:var(--s-7) 0 var(--s-6);text-align:left}
+    .hero-in{display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:var(--s-5)}
+    .hero .intro{margin-left:0}
+    .hero-cta{justify-content:flex-start}
+    .hero-art{justify-self:center}
+    .hero-clem-btn .clem{width:280px}
+  }
 
-  /* sections + rhythm bands */
+  /* ---- clementine character (shared by hero, game, swatches) ---- */
+  .clem{--peel:var(--orange);--peel-d:var(--orange-d);overflow:visible}
+  .clem[data-skin=umoden]{--peel:var(--unripe);--peel-d:var(--unripe-d)}
+  .clem[data-skin=guld]{--peel:var(--gold);--peel-d:var(--gold-d)}
+  .clem .peel-solid{fill:var(--peel)}
+  .clem .shine{fill:#fff;opacity:.28}
+  .clem .stem-line{fill:none;stroke:#5b3d22;stroke-width:4;stroke-linecap:round}
+  .clem .leaf{fill:var(--leaf)}
+  .clem .cheeks{fill:#E8603C;opacity:.28}
+  .clem .blink circle{fill:var(--ink)}
+  .clem .blink{transform-box:fill-box;transform-origin:center;animation:blink 5.5s infinite}
+  .clem .mouth{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;transition:d .2s}
+  .clem .brows{stroke:var(--ink);stroke-width:3.4;stroke-linecap:round;opacity:0;transition:opacity .2s}
+  .clem .tear{fill:#7FB0C4;opacity:0;transition:opacity .2s}
+  .clem .acc{display:none}
+  .clem[data-skin=solbriller] .acc-sun,
+  .clem[data-skin=nissehue] .acc-hat,
+  .clem[data-skin=kongen] .acc-crown,
+  .clem[data-skin=guld] .acc-spark{display:inline}
+  .clem[data-skin=nissehue] .stem,.clem[data-skin=kongen] .stem{display:none}
+  .clem .spark{transform-box:fill-box;transform-origin:center;animation:twinkle 1.8s ease-in-out infinite}
+  .clem .spark.s2{animation-delay:.9s}
+  @keyframes blink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.1)}}
+  @keyframes twinkle{50%{transform:scale(.4) rotate(45deg);opacity:.4}}
+
+  /* ---- sections + rhythm bands ---- */
   section{padding:var(--s-6) 0;position:relative}
   section.panel::before{content:"";position:absolute;top:0;bottom:0;left:50%;
     transform:translateX(-50%);width:100vw;background:var(--panel);z-index:-1}
-  h2{font-weight:var(--w-black);font-size:var(--t-h2);letter-spacing:-.01em;margin:0 0 var(--s-4);
-    position:relative;padding-left:34px;line-height:1.1}
-  h2::before{content:"";position:absolute;left:0;top:.04em;width:24px;height:24px;
+  h2{font-weight:var(--w-black);font-size:var(--t-h2);letter-spacing:-.015em;margin:0 0 var(--s-4);
+    position:relative;padding-left:38px;line-height:1.1}
+  h2::before{content:"";position:absolute;left:0;top:.06em;width:27px;height:27px;
     background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='14.5' r='8.5' fill='%23F07F1A'/%3E%3Cpath d='M12 6.5q4-3 7.5-1q-2.2 4.2-7.5 1z' fill='%233F7D4E'/%3E%3C/svg%3E") no-repeat center/contain}
+  .lede{color:var(--muted);font-size:var(--t-body);margin:calc(var(--s-3) * -1) 0 var(--s-4);max-width:560px}
 
-  /* facts */
-  .fact{font-size:var(--t-lead);font-weight:var(--w-med);line-height:1.5;min-height:4.5em;margin:0 0 var(--s-3);
-    display:flex;align-items:center;transition:opacity .2s}
-  .fact-no{display:block;font-weight:var(--w-med);color:var(--muted);font-size:var(--t-label);margin-top:var(--s-2)}
-
-  /* button */
-  .btn{font-family:var(--font);font-weight:var(--w-bold);font-size:var(--t-body);color:#fff;background:var(--ink);
-    border:none;border-radius:var(--r-sm);padding:13px 22px;cursor:pointer;transition:background .15s}
-  .btn:hover{background:var(--orange-d)}
+  /* ---- button ---- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:var(--w-bold);
+    font-size:var(--t-body);color:#fff;background:var(--ink);text-decoration:none;
+    border:2px solid var(--ink);border-radius:var(--r-sm);padding:11px 20px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+  .btn:hover{background:var(--orange-d);border-color:var(--orange-d)}
   .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn:focus-visible,.opt:focus-visible,.skin-btn:focus-visible,.answer:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
 
-  /* game */
+  /* ---- facts ---- */
+  .facts{max-width:720px}
+  .fact{font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:var(--w-bold);line-height:1.4;min-height:4.4em;margin:0 0 var(--s-3);
+    display:flex;align-items:center;transition:opacity .2s,transform .2s}
+  .fact.out{opacity:0;transform:translateY(6px)}
+  .fact-row{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
+  .fact-meta{flex:1 1 200px;display:flex;flex-direction:column;gap:6px;min-width:180px}
+  .fact-meta .track{flex:none}
+  .fact-no{font-weight:var(--w-med);color:var(--muted);font-size:var(--t-label)}
+
+  /* shared bars */
+  .track{flex:1;height:9px;background:var(--line);border-radius:6px;overflow:hidden;display:block}
+  .fill{display:block;height:100%;background:var(--orange);width:0;transition:width .6s ease}
+
+  /* ---- game ---- */
+  .game{display:grid;gap:var(--s-5)}
+  @media(min-width:860px){.game{grid-template-columns:1fr 1fr;align-items:start}}
   .clicker{text-align:center}
   .stage{position:relative;display:inline-block}
-  .clem-btn{background:none;border:none;padding:0;cursor:pointer;display:block;line-height:0;-webkit-tap-highlight-color:transparent}
+  .clem-btn{background:none;border:none;padding:0;cursor:pointer;display:block;line-height:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   .clem-btn:active{transform:translateY(2px)}
-  .clem-svg{width:min(60vw,240px);height:auto;display:block}
-  .wedge{transition:transform .5s cubic-bezier(.32,1.18,.6,1),opacity .42s ease;transform-box:fill-box;transform-origin:center}
+  .clem-btn .clem{width:min(66vw,300px);height:auto;display:block}
+  .clem-btn .blink{animation-delay:2.1s}
+  .wedge{fill:var(--peel);stroke:var(--peel-d);stroke-width:1.3;
+    transition:transform .5s cubic-bezier(.32,1.18,.6,1),opacity .42s ease;transform-box:fill-box;transform-origin:center}
   .plus{position:absolute;left:50%;top:30%;font-weight:var(--w-black);font-size:var(--t-lead);color:var(--orange-d);
     pointer-events:none;animation:rise .85s ease-out forwards}
   @keyframes rise{0%{opacity:1;transform:translate(-50%,0) scale(.7)}100%{opacity:0;transform:translate(-50%,-70px) scale(1.2)}}
-  .status{font-weight:var(--w-med);color:var(--muted);font-size:var(--t-body);min-height:1.6em;margin:var(--s-3) auto;max-width:440px;transition:opacity .25s}
+  .bit{position:absolute;left:50%;top:48%;width:12px;height:8px;border-radius:50% 50% 40% 40%;pointer-events:none}
+  .status{font-weight:var(--w-med);color:var(--muted);font-size:var(--t-body);min-height:3.3em;margin:var(--s-3) auto;max-width:440px;transition:opacity .25s}
   .count{display:flex;flex-direction:column;align-items:center;gap:var(--s-1)}
   .count .n{font-weight:var(--w-display);font-size:var(--t-mega);line-height:.9;letter-spacing:-.03em}
   .count .n.bump{animation:bump .26s ease}
   @keyframes bump{45%{transform:scale(1.13)}}
   .count .lbl{font-weight:var(--w-med);color:var(--muted);font-size:var(--t-label);text-transform:uppercase;letter-spacing:.12em}
+  .timer{display:flex;align-items:center;gap:var(--s-2);max-width:320px;margin:var(--s-3) auto 0;font-weight:var(--w-bold);font-variant-numeric:tabular-nums}
+  .timer .fill{transition:none;background:var(--ink)}
+  .timer.low .fill{background:var(--red)}
+  .timer-t{min-width:4.2em;text-align:right}
+  #again{margin-top:var(--s-3)}
 
-  /* reviews summary */
+  .side{display:flex;flex-direction:column;gap:var(--s-3)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s-3)}
+  .mini-h{margin:0 0 var(--s-2);font-size:var(--t-label);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:var(--w-bold)}
+  .lvl b{display:block;font-size:var(--t-lead);font-weight:var(--w-black);line-height:1.2;margin-bottom:var(--s-1)}
+  .lvl .small{display:block;color:var(--muted);font-size:var(--t-small);margin-top:6px}
+  .nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-2);margin-top:var(--s-3);padding-top:var(--s-3);border-top:1px solid var(--line)}
+  .nums b{display:block;font-size:clamp(1.4rem,4vw,2rem);font-weight:var(--w-display);line-height:1;letter-spacing:-.02em}
+  .nums span{font-size:var(--t-small);color:var(--muted)}
+  .skins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-1)}
+  .skin-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px 8px;border:2px solid transparent;border-radius:var(--r-md);
+    background:var(--paper);cursor:pointer;font-size:var(--t-label);font-weight:var(--w-bold);line-height:1.2;text-align:center;color:var(--ink);transition:border-color .15s,background .15s}
+  .skin-btn:hover:not(:disabled){border-color:var(--line)}
+  .skin-btn[aria-pressed=true]{border-color:var(--orange);background:var(--card)}
+  .skin-btn .clem{width:46px;height:auto}
+  .skin-btn small{font-weight:var(--w-med);color:var(--muted);font-size:.72rem}
+  .skin-btn:disabled{cursor:not-allowed}
+  .skin-btn:disabled .clem{filter:grayscale(1) brightness(1.3);opacity:.45}
+  .skin-btn:disabled b{color:var(--muted)}
+
+  /* ---- clementin-året ---- */
+  .year{max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:0 0 var(--s-3);font-size:var(--t-small);color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
+  .year-bars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:150px}
+  .year-bars .bar{border-radius:3px 3px 0 0;min-height:4px;transform-origin:bottom;transform:scaleY(0);transition:transform .7s cubic-bezier(.3,1.2,.5,1)}
+  .year.in .bar{transform:scaleY(1)}
+  .year-bars .bar.now{outline:2px solid var(--ink);outline-offset:2px}
+  .year-months{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:var(--s-1)}
+  .year-months span{text-align:center;font-size:var(--t-label);color:var(--muted);font-weight:var(--w-med)}
+  .year-months span.now{color:var(--ink);font-weight:var(--w-black)}
+  .year-cap{color:var(--muted);font-size:var(--t-body);margin:var(--s-3) 0 0;max-width:560px}
+  .ph-blomst{background:#86C08F} .ph-vaekst{background:var(--leaf)}
+  .ph-modning{background:var(--flesh)} .ph-host{background:var(--orange)} .ph-hvile{background:var(--line)}
+
+  /* ---- quiz ---- */
+  .quiz{max-width:680px;margin:0 0 var(--s-5)}
+  .q-prog{display:flex;gap:6px;margin-bottom:var(--s-3)}
+  .q-prog i{flex:1;height:6px;border-radius:3px;background:var(--line);transition:background .2s}
+  .q-prog i.on{background:var(--orange)}
+  .q-no{font-size:var(--t-label);color:var(--muted);font-weight:var(--w-bold);text-transform:uppercase;letter-spacing:.12em}
+  .q-text{font-size:clamp(1.3rem,2.8vw,1.6rem);font-weight:var(--w-black);line-height:1.25;margin:6px 0 var(--s-3)}
+  .answers{display:grid;gap:var(--s-1)}
+  @media(min-width:640px){.answers{grid-template-columns:1fr 1fr}}
+  .answer{text-align:left;border:2px solid var(--line);background:var(--paper);border-radius:var(--r-md);padding:14px 16px;
+    font-size:var(--t-body);font-weight:var(--w-med);color:var(--ink);cursor:pointer;line-height:1.4;transition:border-color .15s,background .15s,transform .1s}
+  .answer:hover{border-color:var(--orange);background:var(--card)}
+  .answer:active{transform:scale(.98)}
+  .q-anim{animation:qin .3s ease}
+  @keyframes qin{from{opacity:0;transform:translateX(12px)}}
+  .q-result{text-align:center;padding:var(--s-2) 0}
+  .q-result .clem{width:110px;height:auto;margin:0 auto var(--s-2);display:block}
+  .q-kicker{color:var(--muted);font-weight:var(--w-med)}
+  .q-type{font-size:var(--t-display);font-weight:var(--w-display);line-height:1;letter-spacing:-.02em;margin:6px 0 var(--s-2);color:var(--orange-d)}
+  .q-ess{max-width:440px;margin:0 auto var(--s-3);font-size:var(--t-lead);line-height:1.45}
+
+  /* ---- clementin-typer ---- */
+  .types{display:grid;grid-template-columns:1fr;gap:var(--s-3)}
+  @media(min-width:560px){.types{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(min-width:900px){.types{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .type{min-width:0;border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-3);background:var(--card);position:relative;transition:border-color .2s,box-shadow .2s}
+  .type.mine{border:2px solid var(--orange);box-shadow:0 8px 24px rgba(240,127,26,.15)}
+  .type.mine::after{content:"Dig";position:absolute;top:-11px;right:16px;background:var(--orange);color:#fff;font-size:var(--t-label);
+    font-weight:var(--w-black);padding:2px 10px;border-radius:99px}
+  .type-head{display:flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-2)}
+  .type-ic{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--paper);
+    display:flex;align-items:center;justify-content:center}
+  .type-ic svg{width:22px;height:22px;display:block}
+  .type h3{margin:0;font-size:var(--t-lead);font-weight:var(--w-black);line-height:1.1;overflow-wrap:anywhere}
+  .type .ess{margin:0 0 var(--s-2);color:var(--muted);font-size:var(--t-small);font-style:italic;line-height:1.45}
+  .type dl{margin:0}
+  .type dt{font-size:var(--t-label);text-transform:uppercase;letter-spacing:.1em;color:var(--orange-d);font-weight:var(--w-bold);margin-top:var(--s-2)}
+  .type dd{margin:2px 0 0;font-size:var(--t-small);line-height:1.5}
+
+  /* ---- clementine banner ---- */
+  .banner{width:100vw;position:relative;left:50%;transform:translateX(-50%);
+    height:150px;background:var(--orange);overflow:hidden;display:block}
+  .banner svg{position:absolute;top:0;left:0;width:calc(100% + 300px);height:100%;display:block;animation:drift 30s linear infinite}
+  @keyframes drift{to{transform:translateX(-300px)}}
+  @media(max-width:520px){.banner{height:118px}}
+
+  /* ---- reviews summary ---- */
   .summary{display:flex;gap:var(--s-5);align-items:center;flex-wrap:wrap;
-    padding:0 0 var(--s-4);margin-bottom:var(--s-4);border-bottom:1px solid var(--line)}
+    padding:0 0 var(--s-4);margin-bottom:var(--s-4);border-bottom:1px solid var(--line);max-width:760px}
   .score{text-align:center;flex:0 0 auto}
   .score .big{font-weight:var(--w-display);font-size:var(--t-display);line-height:.9;letter-spacing:-.03em}
   .starbar{position:relative;display:inline-block;font-size:var(--t-lead);letter-spacing:3px;line-height:1;margin-top:var(--s-1)}
@@ -93,11 +257,9 @@
   .row{display:flex;align-items:center;gap:var(--s-2);font-size:var(--t-small);color:var(--muted)}
   .row .k{width:34px;text-align:right;white-space:nowrap}
   .row .k b{color:var(--ink);font-weight:var(--w-bold)}
-  .track{flex:1;height:9px;background:var(--line);border-radius:6px;overflow:hidden}
-  .fill{height:100%;background:var(--orange);width:0;transition:width .6s ease}
   .row .v{width:18px;text-align:right}
 
-  /* review carousel */
+  /* ---- review carousel ---- */
   #reviews{display:flex;gap:var(--s-3);overflow-x:auto;scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;padding:4px 0 6px;scrollbar-width:none}
   #reviews::-webkit-scrollbar{display:none}
@@ -116,113 +278,100 @@
   .car-ctrl button:hover{background:var(--ink);color:#fff}
   .car-ctrl button:active{transform:translateY(1px)}
 
-  /* clementin-året */
-  .legend{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:0 0 var(--s-3);font-size:var(--t-small);color:var(--muted)}
-  .legend span{display:inline-flex;align-items:center;gap:7px}
-  .legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
-  .year-bars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;align-items:end;height:130px}
-  .year-bars .bar{border-radius:3px 3px 0 0;min-height:4px}
-  .year-months{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:var(--s-1)}
-  .year-months span{text-align:center;font-size:var(--t-label);color:var(--muted);font-weight:var(--w-med)}
-  .year-cap{color:var(--muted);font-size:var(--t-body);margin:var(--s-3) 0 0;max-width:520px}
-  .ph-blomst{background:#86C08F} .ph-vaekst{background:var(--leaf)}
-  .ph-modning{background:var(--flesh)} .ph-host{background:var(--orange)} .ph-hvile{background:var(--line)}
-
-  /* clementin-typer */
-  .types-lead{color:var(--muted);font-size:var(--t-body);margin:0 0 var(--s-4)}
-  .types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
-  .type{min-width:0;border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-3);background:var(--card)}
-  .type-head{display:flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-2)}
-  .type-ic{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--paper);
-    display:flex;align-items:center;justify-content:center}
-  .type-ic svg{width:22px;height:22px;display:block}
-  .type h3{margin:0;font-size:var(--t-lead);font-weight:var(--w-black);line-height:1.1;overflow-wrap:anywhere}
-  .type .ess{margin:0 0 var(--s-2);color:var(--muted);font-size:var(--t-small);font-style:italic;line-height:1.45}
-  .type dl{margin:0}
-  .type dt{font-size:var(--t-label);text-transform:uppercase;letter-spacing:.1em;color:var(--orange-d);font-weight:var(--w-bold);margin-top:var(--s-2)}
-  .type dd{margin:2px 0 0;font-size:var(--t-small);line-height:1.5}
-  @media(max-width:540px){.types{grid-template-columns:1fr}}
-
-  /* clementine banner */
-  .banner{width:100vw;position:relative;left:50%;transform:translateX(-50%);
-    height:150px;background:var(--orange);overflow:hidden;display:block}
-  .banner svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-  @media(max-width:520px){.banner{height:118px}}
-
-  /* footer */
+  /* ---- footer ---- */
   footer{padding:var(--s-5) 0 var(--s-6);text-align:center;color:var(--muted);font-size:var(--t-small)}
   footer p{margin:4px 0}
   footer b{color:var(--ink);font-weight:var(--w-bold)}
+  .privacy{max-width:420px;margin:var(--s-3) auto 0 !important;font-size:var(--t-label)}
+  .linkbtn{background:none;border:none;padding:0;margin-top:6px;font-size:var(--t-small);font-weight:var(--w-bold);color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .linkbtn:hover{color:var(--orange-d)}
+
+  /* ---- toast ---- */
+  .toast{position:fixed;left:50%;bottom:24px;z-index:30;transform:translate(-50%,140%);background:var(--ink);color:#fff;
+    padding:12px 20px;border-radius:99px;font-weight:var(--w-bold);font-size:var(--t-small);box-shadow:0 10px 30px rgba(36,31,24,.25);
+    transition:transform .35s cubic-bezier(.3,1.3,.5,1);max-width:calc(100vw - 32px);text-align:center}
+  .toast.show{transform:translate(-50%,0)}
 
   @media (max-width:520px){.summary{gap:var(--s-3)}.score{flex:1 1 100%}}
-  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+
+
 <div class="wrap">
 
   <!-- ===== HERO ===== -->
-  <header>
-    <svg class="mascot" viewBox="0 0 200 224" aria-hidden="true">
-      <ellipse cx="100" cy="196" rx="56" ry="8" fill="#241F18" opacity=".07"/>
-      <circle cx="100" cy="110" r="70" fill="#F07F1A"/>
-      <path d="M100 44 q2-10 0-16" fill="none" stroke="#5b3d22" stroke-width="4" stroke-linecap="round"/>
-      <path d="M101 33 q14-9 27-3 q-9 13-27 3z" fill="#3F7D4E"/>
-      <circle cx="82" cy="104" r="5.5" fill="#241F18"/>
-      <circle cx="118" cy="104" r="5.5" fill="#241F18"/>
-      <path d="M84 126 Q100 138 116 126" fill="none" stroke="#241F18" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-    <h1>Elsker du også<br>clementiner?</h1>
-    <p class="sub">Ja. Selvfølgelig gør du det.</p>
-    <p class="intro">En hjemmeside om clementiner. Ikke mandariner, ikke appelsiner — clementiner. Her kan du skrælle en, lære alt for meget om dem og finde ud af, hvilken slags clementin-elsker du er. Det er hele konceptet. Der kommer ikke mere.</p>
+  <header class="hero" id="top">
+    <div class="hero-in">
+      <div class="hero-text">
+        <h1>Elsker du også<br>clementiner?</h1>
+        <p class="sub">Ja. Selvfølgelig gør du det.</p>
+        <p class="intro">En hjemmeside om clementiner. Ikke mandariner, ikke appelsiner — clementiner. Her kan du skrælle en, lære alt for meget om dem og finde ud af, hvilken slags clementin-elsker du er. Det er hele konceptet. Der kommer ikke mere.</p>
+        <p class="welcome" id="welcome" hidden></p>
+      </div>
+      <div class="hero-art">
+        <button class="hero-clem-btn" id="heroClem" aria-label="Sig hej til clementinen">
+          <span class="bubble" id="bubble" aria-live="polite"></span>
+        </button>
+      </div>
+    </div>
   </header>
 
   <!-- ===== FACTS ===== -->
-  <section class="panel">
+  <section class="panel" id="fakta">
     <h2>Alt om clementiner</h2>
-    <p class="fact" id="fact"></p>
-    <button class="btn" id="factBtn">Mere clementin viden</button>
-    <span class="fact-no" id="factNo"></span>
+    <div class="facts">
+      <p class="fact" id="fact"></p>
+      <div class="fact-row">
+        <button class="btn" id="factBtn">Mere clementin viden</button>
+        <div class="fact-meta">
+          <span class="fact-no" id="factNo"></span>
+          <span class="track"><span class="fill" id="factFill"></span></span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ===== GAME ===== -->
-  <section>
+  <section id="spil">
     <h2>Skræl en clementin</h2>
-    <div class="clicker">
-      <div class="stage">
-        <button class="clem-btn" id="clem" aria-label="Skræl clementinen">
-          <svg class="clem-svg" viewBox="0 0 200 224" aria-hidden="true">
-            <ellipse cx="100" cy="196" rx="56" ry="8" fill="#241F18" opacity=".07"/>
-            <g id="flesh">
-              <circle cx="100" cy="110" r="70" fill="var(--flesh)"/>
-              <g stroke="var(--orange-d)" stroke-width="1.4" opacity=".55">
-                <line x1="100" y1="110" x2="100" y2="40"/><line x1="100" y1="110" x2="141" y2="53"/>
-                <line x1="100" y1="110" x2="167" y2="89"/><line x1="100" y1="110" x2="167" y2="131"/>
-                <line x1="100" y1="110" x2="141" y2="167"/><line x1="100" y1="110" x2="100" y2="180"/>
-                <line x1="100" y1="110" x2="59" y2="167"/><line x1="100" y1="110" x2="33" y2="131"/>
-                <line x1="100" y1="110" x2="33" y2="89"/><line x1="100" y1="110" x2="59" y2="53"/>
-              </g>
-              <circle cx="100" cy="110" r="6" fill="var(--orange-d)" opacity=".5"/>
-            </g>
-            <g id="skin"></g>
-            <path d="M100 44 q2-10 0-16" fill="none" stroke="#5b3d22" stroke-width="4" stroke-linecap="round"/>
-            <path d="M101 33 q14-9 27-3 q-9 13-27 3z" fill="var(--leaf)"/>
-            <g id="face">
-              <g id="brows" opacity="0" stroke="var(--ink)" stroke-width="3.4" stroke-linecap="round">
-                <line x1="72" y1="90" x2="88" y2="95"/><line x1="128" y1="90" x2="112" y2="95"/>
-              </g>
-              <circle cx="82" cy="104" r="5.5" fill="var(--ink)"/>
-              <circle cx="118" cy="104" r="5.5" fill="var(--ink)"/>
-              <path id="mouth" d="M84 126 Q100 138 116 126" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
-              <path id="tear" d="M82 112 q4 9 0 14 q-4-5 0-14z" fill="#7FB0C4" opacity="0"/>
-            </g>
-          </svg>
-        </button>
+    <p class="lede">30 sekunder pr. runde. Ti klik pr. clementin. Bliv hurtig nok, og der låses nye clementiner op.</p>
+    <div class="game">
+      <div class="clicker">
+        <div class="stage" id="stage">
+          <button class="clem-btn" id="clem" aria-label="Skræl clementinen"></button>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+        <div class="count">
+          <span class="n" id="count">0</span>
+          <span class="lbl" id="countLbl">skrællet i denne runde</span>
+        </div>
+        <div class="timer" id="timer">
+          <span class="track"><span class="fill" id="timerFill" style="width:100%"></span></span>
+          <span class="timer-t" id="timerT">30,0 s</span>
+        </div>
+        <button class="btn" id="again" hidden>Prøv igen</button>
       </div>
-      <p class="status" id="status">Klik for at skrælle. Ti gange. Den bryder sig ikke om det.</p>
-      <div class="count" aria-live="polite">
-        <span class="n" id="count">0</span>
-        <span class="lbl">clementiner skrællet</span>
+
+      <div class="side">
+        <div class="card">
+          <h3 class="mini-h">Dit niveau</h3>
+          <div class="lvl">
+            <b id="lvlName"></b>
+            <span class="track"><span class="fill" id="lvlFill"></span></span>
+            <span class="small" id="lvlNext"></span>
+          </div>
+          <div class="nums">
+            <div><b id="sTotal">0</b><span>skrællet i alt</span></div>
+            <div><b id="sBest">0</b><span>rekord på 30 sek.</span></div>
+            <div><b id="sFast">–</b><span>hurtigste skræl</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="mini-h">Dine clementiner</h3>
+          <div class="skins" id="skins"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -230,40 +379,63 @@
   <!-- ===== CLEMENTIN-ÅRET ===== -->
   <section class="panel">
     <h2>Clementin-året</h2>
-    <div class="legend">
-      <span><i class="ph-blomst"></i>Blomstring</span>
-      <span><i class="ph-vaekst"></i>Vækst</span>
-      <span><i class="ph-modning"></i>Modning</span>
-      <span><i class="ph-host"></i>Høst</span>
+    <div class="year" id="year">
+      <div class="legend">
+        <span><i class="ph-blomst"></i>Blomstring</span>
+        <span><i class="ph-vaekst"></i>Vækst</span>
+        <span><i class="ph-modning"></i>Modning</span>
+        <span><i class="ph-host"></i>Høst</span>
+      </div>
+      <div class="year-bars" aria-hidden="true">
+        <div class="bar ph-host" style="height:92%"></div>
+        <div class="bar ph-hvile" style="height:8%"></div>
+        <div class="bar ph-blomst" style="height:16%"></div>
+        <div class="bar ph-blomst" style="height:22%"></div>
+        <div class="bar ph-vaekst" style="height:34%"></div>
+        <div class="bar ph-vaekst" style="height:46%"></div>
+        <div class="bar ph-vaekst" style="height:58%"></div>
+        <div class="bar ph-vaekst" style="height:70%"></div>
+        <div class="bar ph-vaekst" style="height:80%"></div>
+        <div class="bar ph-modning" style="height:88%"></div>
+        <div class="bar ph-host" style="height:96%"></div>
+        <div class="bar ph-host" style="height:100%"></div>
+      </div>
+      <div class="year-months">
+        <span>jan</span><span>feb</span><span>mar</span><span>apr</span><span>maj</span><span>jun</span>
+        <span>jul</span><span>aug</span><span>sep</span><span>okt</span><span>nov</span><span>dec</span>
+      </div>
+      <p class="year-cap">Clementiner blomstrer om foråret, vokser hen over sommeren og høstes fra november til januar. Derfor smager julen af clementin. <span id="yearNow"></span></p>
     </div>
-    <div class="year-bars" aria-hidden="true">
-      <div class="bar ph-host" style="height:92%"></div>
-      <div class="bar ph-hvile" style="height:8%"></div>
-      <div class="bar ph-blomst" style="height:16%"></div>
-      <div class="bar ph-blomst" style="height:22%"></div>
-      <div class="bar ph-vaekst" style="height:34%"></div>
-      <div class="bar ph-vaekst" style="height:46%"></div>
-      <div class="bar ph-vaekst" style="height:58%"></div>
-      <div class="bar ph-vaekst" style="height:70%"></div>
-      <div class="bar ph-vaekst" style="height:80%"></div>
-      <div class="bar ph-modning" style="height:88%"></div>
-      <div class="bar ph-host" style="height:96%"></div>
-      <div class="bar ph-host" style="height:100%"></div>
-    </div>
-    <div class="year-months">
-      <span>jan</span><span>feb</span><span>mar</span><span>apr</span><span>maj</span><span>jun</span>
-      <span>jul</span><span>aug</span><span>sep</span><span>okt</span><span>nov</span><span>dec</span>
-    </div>
-    <p class="year-cap">Clementiner blomstrer om foråret, vokser hen over sommeren og høstes fra november til januar. Derfor smager julen af clementin.</p>
   </section>
 
-  <!-- ===== CLEMENTIN-TYPER ===== -->
-  <section>
+  <!-- ===== QUIZ + TYPER ===== -->
+  <section id="quiz">
     <h2>Hvilken clementin-elsker er du?</h2>
-    <p class="types-lead">Der findes seks slags. Du er nok mest én af dem.</p>
+    <p class="lede">Fem spørgsmål. Ingen forkerte svar. Kun afslørende.</p>
+
+    <div class="card quiz" id="quizCard">
+      <div id="qAsk">
+        <div class="q-prog" id="qProg"></div>
+        <span class="q-no" id="qNo"></span>
+        <p class="q-text" id="qText"></p>
+        <div class="answers" id="qAnswers"></div>
+      </div>
+      <div class="q-result" id="qResult" hidden>
+        <div id="qClem"></div>
+        <p class="q-kicker">Du er</p>
+        <p class="q-type" id="qType"></p>
+        <p class="q-ess" id="qEss"></p>
+        <div class="hero-cta" style="justify-content:center;margin-top:0">
+          <a class="btn" href="#typer">Læs mere om dig</a>
+          <button class="btn ghost" id="qAgain">Tag quizzen igen</button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="mini-h" id="typer">Alle seks typer</h3>
     <div class="types">
 
-      <div class="type">
+      <div class="type" data-type="skraelleren">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="7"/><path d="M16 6c3 0 5 2 4 5"/></svg></span><h3>Skrælleren</h3></div>
         <p class="ess">Skræller langsomt og grundigt. Processen betyder mere end resultatet.</p>
         <dl>
@@ -273,7 +445,7 @@
         </dl>
       </div>
 
-      <div class="type">
+      <div class="type" data-type="baadedeleren">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 0 0 16 0z"/><path d="M12 10v8"/><path d="M8.2 10.5 9.7 17"/><path d="M15.8 10.5 14.3 17"/></svg></span><h3>Bådedeleren</h3></div>
         <p class="ess">Deler altid. Den sidste båd er sjældent din egen.</p>
         <dl>
@@ -283,7 +455,7 @@
         </dl>
       </div>
 
-      <div class="type">
+      <div class="type" data-type="hamstreren">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span><h3>Hamstreren</h3></div>
         <p class="ess">Køber hele nettet. Spiser næsten alle. Næsten.</p>
         <dl>
@@ -293,7 +465,7 @@
         </dl>
       </div>
 
-      <div class="type">
+      <div class="type" data-type="perfektionisten">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z"/></svg></span><h3>Perfektionisten</h3></div>
         <p class="ess">Fjerner alt det hvide. Hver eneste tråd. Det tager tid.</p>
         <dl>
@@ -303,7 +475,7 @@
         </dl>
       </div>
 
-      <div class="type">
+      <div class="type" data-type="saesonpuristen">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg></span><h3>Sæson-puristen</h3></div>
         <p class="ess">Spiser kun clementiner i december. Resten af året venter du.</p>
         <dl>
@@ -313,7 +485,7 @@
         </dl>
       </div>
 
-      <div class="type">
+      <div class="type" data-type="funktionelle">
         <div class="type-head"><span class="type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F07F1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/></svg></span><h3>Den funktionelle</h3></div>
         <p class="ess">Spiser clementinen. Ingen ceremoni. Den var der, og nu er den væk.</p>
         <dl>
@@ -353,7 +525,7 @@
   </div>
 
   <!-- ===== REVIEWS ===== -->
-  <section class="panel">
+  <section class="panel" id="anmeldelser">
     <h2>Anmeldelser</h2>
 
     <div class="summary">
@@ -411,15 +583,121 @@
   </section>
 
   <footer>
-    <p>Du er gæst nr. <b id="visitor">24.601</b>.</p>
+    <p>Du er gæst nr. <b>24.601</b>.</p>
+    <p id="visits"></p>
     <p><b>clementin.dk</b> — etableret i år, af kedsomhed.</p>
+    <p>Koncept, design og kode: Sandra + Claude.</p>
+    <p class="privacy">Siden husker dine clementiner, din rekord og din type i din egen browser. Intet bliver sendt nogen steder hen.</p>
+    <button class="linkbtn" id="forget">Glem mig</button>
   </footer>
 
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
 (function(){
   "use strict";
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function $(id){return document.getElementById(id);}
+  function fmt(n){return n.toLocaleString('da-DK');}
+
+  /* ---------- MEMORY (browser only, nothing leaves the device) ---------- */
+  var KEY='clementin-dk';
+  var mem={visits:0,total:0,best:0,fast:0,unlocked:['klassisk'],skin:'klassisk',fact:0,type:null};
+  try{var saved=JSON.parse(localStorage.getItem(KEY)||'{}');for(var k in saved){if(k in mem)mem[k]=saved[k];}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(mem));}catch(e){}}
+  mem.visits++; save();
+
+  /* ---------- CLEMENTINE CHARACTER ---------- */
+  function clemSVG(cls,skin,game){
+    return '<svg class="clem '+(cls||'')+'" data-skin="'+(skin||'klassisk')+'" viewBox="0 0 200 224" aria-hidden="true">'+
+      '<ellipse cx="100" cy="196" rx="56" ry="8" fill="#241F18" opacity=".07"/>'+
+      (game
+        ? '<g class="flesh"><circle cx="100" cy="110" r="70" fill="#FBB264"/>'+
+            '<g stroke="#D86A0C" stroke-width="1.4" opacity=".55">'+
+            '<line x1="100" y1="110" x2="100" y2="40"/><line x1="100" y1="110" x2="141" y2="53"/>'+
+            '<line x1="100" y1="110" x2="167" y2="89"/><line x1="100" y1="110" x2="167" y2="131"/>'+
+            '<line x1="100" y1="110" x2="141" y2="167"/><line x1="100" y1="110" x2="100" y2="180"/>'+
+            '<line x1="100" y1="110" x2="59" y2="167"/><line x1="100" y1="110" x2="33" y2="131"/>'+
+            '<line x1="100" y1="110" x2="33" y2="89"/><line x1="100" y1="110" x2="59" y2="53"/></g>'+
+            '<circle cx="100" cy="110" r="6" fill="#D86A0C" opacity=".5"/></g><g class="skin"></g>'
+        : '<circle class="peel-solid" cx="100" cy="110" r="70"/><ellipse class="shine" cx="74" cy="76" rx="16" ry="9" transform="rotate(-35 74 76)"/>')+
+      '<g class="acc acc-spark"><path class="spark" d="M34 58l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#E9B949"/><path class="spark s2" d="M168 150l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#E9B949"/></g>'+
+      '<g class="stem"><path class="stem-line" d="M100 44 q2-10 0-16"/><path class="leaf" d="M101 33 q14-9 27-3 q-9 13-27 3z"/></g>'+
+      '<g class="cheeks"><ellipse cx="68" cy="121" rx="9" ry="5.5"/><ellipse cx="132" cy="121" rx="9" ry="5.5"/></g>'+
+      '<g class="brows"><line x1="72" y1="90" x2="88" y2="95"/><line x1="128" y1="90" x2="112" y2="95"/></g>'+
+      '<g class="look"><g class="blink"><circle cx="82" cy="104" r="5.5"/><circle cx="118" cy="104" r="5.5"/></g></g>'+
+      '<path class="mouth" d="M84 126 Q100 138 116 126"/>'+
+      '<path class="tear" d="M82 112 q4 9 0 14 q-4-5 0-14z"/>'+
+      '<g class="acc acc-sun"><path d="M58 97l10 3M142 97l-10 3" stroke="#241F18" stroke-width="3" stroke-linecap="round"/>'+
+        '<rect x="66" y="94" width="29" height="19" rx="8" fill="#241F18"/><rect x="105" y="94" width="29" height="19" rx="8" fill="#241F18"/>'+
+        '<path d="M95 100h10" stroke="#241F18" stroke-width="3"/><path d="M71 100l7-3M110 100l7-3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".55"/></g>'+
+      '<g class="acc acc-hat"><path d="M62 58 Q80 6 130 10 Q122 30 140 58 Z" fill="#D7372F"/><circle cx="131" cy="12" r="10" fill="#FFFCF6"/>'+
+        '<rect x="54" y="49" width="92" height="16" rx="8" fill="#FFFCF6"/></g>'+
+      '<g class="acc acc-crown"><path d="M70 54 L65 22 L84 37 L100 13 L116 37 L135 22 L130 54 Z" fill="#E9B949" stroke="#B8862B" stroke-width="2" stroke-linejoin="round"/>'+
+        '<circle cx="100" cy="42" r="4.5" fill="#D7372F"/><circle cx="82" cy="46" r="3" fill="#3F7D4E"/><circle cx="118" cy="46" r="3" fill="#3F7D4E"/></g>'+
+    '</svg>';
+  }
+
+  /* each clementine is unlocked by a skill, tested when a clementine is finished */
+  var SKINS=[
+    {id:'klassisk',  name:'Klassikeren',     hint:'Din fra start',                    test:function(){return true;}},
+    {id:'solbriller',name:'Den Kølige',      hint:'Skræl 4 i én runde',               test:function(c){return c.score>=4;}},
+    {id:'nissehue',  name:'Julenissen',      hint:'Skræl én på under 2 sek.',         test:function(c){return c.ms<2000;}},
+    {id:'umoden',    name:'Den Umodne',      hint:'Skræl 8 i én runde',               test:function(c){return c.score>=8;}},
+    {id:'guld',      name:'Guldclementinen', hint:'5 i træk, hurtigere og hurtigere', test:function(c){return c.streak>=5;}},
+    {id:'kongen',    name:'Kongen',          hint:'Skræl 12 i én runde',              test:function(c){return c.score>=12;}}
+  ];
+  if(!Array.isArray(mem.unlocked)) mem.unlocked=['klassisk'];
+  function isOpen(id){return mem.unlocked.indexOf(id)>-1;}
+  if(!isOpen(mem.skin)) mem.skin='klassisk';
+
+  $('heroClem').insertAdjacentHTML('beforeend',clemSVG('fixed','klassisk',false));
+  $('clem').innerHTML=clemSVG('',mem.skin,true);
+
+  function applySkin(){
+    document.querySelectorAll('.clem:not(.mini):not(.fixed)').forEach(function(s){s.setAttribute('data-skin',mem.skin);});
+    document.querySelectorAll(".skin-btn").forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===mem.skin?'true':'false');});
+  }
+
+  /* eyes follow the pointer */
+  var px=-1,py=-1,looking=false;
+  function look(){
+    looking=false;
+    document.querySelectorAll('.clem:not(.mini)').forEach(function(svg){
+      var r=svg.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight||!r.width)return;
+      var cx=r.left+r.width/2, cy=r.top+r.height*.46, dx=px-cx, dy=py-cy, d=Math.hypot(dx,dy)||1, k=Math.min(1,d/260)*3.4;
+      svg.querySelector('.look').setAttribute('transform','translate('+(dx/d*k).toFixed(2)+' '+(dy/d*k).toFixed(2)+')');
+    });
+  }
+  window.addEventListener('pointermove',function(e){px=e.clientX;py=e.clientY;if(!looking){looking=true;requestAnimationFrame(look);}},{passive:true});
+
+  /* hero clementine talks back */
+  var lines=['Hej.','Jeg er ikke en mandarin.','Av.','Kildrer.','Skræl mig ikke.','Jeg er 70 % vand og 30 % attitude.','Det er december et sted i verden.','Har du set min skræl?'];
+  var li=0, bubT;
+  $('heroClem').addEventListener('click',function(){
+    var b=$('heroClem'), bub=$('bubble');
+    b.classList.remove('squish'); void b.offsetWidth; b.classList.add('squish');
+    bub.textContent=lines[li++%lines.length]; bub.classList.add('show');
+    clearTimeout(bubT); bubT=setTimeout(function(){bub.classList.remove('show');},1800);
+  });
+
+  /* ---------- WELCOME BACK ---------- */
+  var TYPES={};
+  document.querySelectorAll('.type').forEach(function(t){TYPES[t.dataset.type]={name:t.querySelector('h3').textContent,ess:t.querySelector('.ess').textContent,el:t};});
+  function renderWelcome(){
+    var w=$('welcome');
+    if(mem.visits<2){w.hidden=true;return;}
+    var t='Velkommen tilbage.';
+    if(mem.total>0) t+=' Du har skrællet '+fmt(mem.total)+(mem.total===1?' clementin.':' clementiner.');
+    if(mem.type&&TYPES[mem.type]) t+=' Du er stadig '+TYPES[mem.type].name+'.';
+    else if(!mem.total) t+=' Clementinerne har savnet dig.';
+    w.textContent=t; w.hidden=false;
+  }
+  renderWelcome();
+  $('visits').textContent = mem.visits>1 ? 'Det er dit '+fmt(mem.visits)+'. besøg. Clementinen husker dig.' : '';
 
   /* ---------- FACTS (sequential, so the finale lands last) ---------- */
   var facts=[
@@ -474,46 +752,80 @@
     'Der er ingen clementiner på Mars eller Månen.',
     'Du har nu læst 50 fun facts om clementiner. Du er nu officielt en nørd. Velkommen i klubben! :-D'
   ];
-  var factEl=document.getElementById('fact'),
-      factNo=document.getElementById('factNo'),
-      fi=0;
-  function showFact(){
-    factEl.style.opacity=0;
-    setTimeout(function(){
-      factEl.textContent=facts[fi];
-      factNo.textContent='nr. '+(fi+1)+' af '+facts.length;
-      factEl.style.opacity=1;
-    },150);
+  var fi=(mem.fact>=0&&mem.fact<facts.length)?mem.fact:0;
+  function paintFact(){
+    $('fact').textContent=facts[fi];
+    $('factNo').textContent='nr. '+(fi+1)+' af '+facts.length;
+    $('factFill').style.width=((fi+1)/facts.length*100)+'%';
   }
-  document.getElementById('factBtn').addEventListener('click',function(){
-    fi=(fi+1)%facts.length; showFact();
+  $('factBtn').addEventListener('click',function(){
+    fi=(fi+1)%facts.length; mem.fact=fi; save();
+    $('fact').classList.add('out');
+    setTimeout(function(){paintFact();$('fact').classList.remove('out');},180);
   });
-  factEl.textContent=facts[0];
-  factNo.textContent='nr. 1 af '+facts.length;
+  paintFact();
 
-  /* ---------- GAME ---------- */
+  /* ---------- TOAST ---------- */
+  var toastT;
+  function toast(t){var el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('show');},2600);}
+
+  /* ---------- LEVELS + UNLOCKS ---------- */
+  var LEVELS=[
+    {n:0,t:'Nybegynder'},{n:5,t:'Hobby-skræller'},{n:15,t:'Fast kunde i Netto'},{n:30,t:'Skrællemester'},
+    {n:60,t:'Clementin-sommelier'},{n:100,t:'Levende legende'},{n:250,t:'Jule-Jørgens arving'}
+  ];
+  function levelIdx(n){var i=0;for(var j=0;j<LEVELS.length;j++)if(n>=LEVELS[j].n)i=j;return i;}
+  function secs(ms){return (ms/1000).toFixed(2).replace('.',',');}
+  function renderSkins(){
+    var box=$('skins'); box.innerHTML='';
+    SKINS.forEach(function(s){
+      var open=isOpen(s.id);
+      var b=document.createElement('button');
+      b.className="skin-btn"; b.dataset.id=s.id; b.disabled=!open;
+      b.setAttribute('aria-pressed',s.id===mem.skin?'true':'false');
+      b.setAttribute('aria-label',open?('Vælg '+s.name):('Låst. '+s.hint+' for at låse op.'));
+      b.innerHTML=clemSVG('mini',s.id,false)+'<b>'+(open?s.name:'???')+'</b><small>'+(open?'låst op':s.hint)+'</small>';
+      b.addEventListener('click',function(){mem.skin=s.id;save();applySkin();});
+      box.appendChild(b);
+    });
+  }
+  function renderStats(){
+    var i=levelIdx(mem.total), L=LEVELS[i], N2=LEVELS[i+1];
+    $('lvlName').textContent='Niveau '+(i+1)+': '+L.t;
+    if(N2){
+      $('lvlFill').style.width=((mem.total-L.n)/(N2.n-L.n)*100)+'%';
+      $('lvlNext').textContent=(N2.n-mem.total)+' til '+N2.t;
+    }else{
+      $('lvlFill').style.width='100%'; $('lvlNext').textContent='Der er ikke flere niveauer. Kun flere clementiner.';
+    }
+    $('sTotal').textContent=fmt(mem.total);
+    $('sBest').textContent=fmt(mem.best);
+    $('sFast').textContent=mem.fast?secs(mem.fast)+' s':'–';
+  }
+
+  /* ---------- GAME: every round is 30 seconds ---------- */
   var SVGNS="http://www.w3.org/2000/svg";
-  var clem=document.getElementById('clem'),skin=document.getElementById('skin'),
-      stage=document.querySelector('.stage'),countEl=document.getElementById('count'),
-      statusEl=document.getElementById('status'),mouth=document.getElementById('mouth'),
-      brows=document.getElementById('brows'),tear=document.getElementById('tear');
-  var CX=100,CY=110,R=72,N=10;
-  var count=0, remaining=0, locked=false; /* nulstilles ved genindlæsning */
-  function setVisitor(){document.getElementById('visitor').textContent=(24601+count).toLocaleString('da-DK');}
-  countEl.textContent=count.toLocaleString('da-DK'); setVisitor();
+  var gameSvg=$('clem').querySelector('svg'), skinG=gameSvg.querySelector('.skin'),
+      mouth=gameSvg.querySelector('.mouth'), brows=gameSvg.querySelector('.brows'), tear=gameSvg.querySelector('.tear'),
+      stage=$('stage'), countEl=$('count'), statusEl=$('status');
+  var CX=100,CY=110,R=72,N=10,RUN_MS=30000;
+  var remaining=0, locked=false, clemStart=0;
+  var run={state:'idle',score:0,end:0,t:null,lastMs:0,streak:0};
 
   function polar(a){return{x:CX+R*Math.cos(a),y:CY+R*Math.sin(a)};}
   function buildSkin(){
-    skin.innerHTML=''; var start=-Math.PI/2, step=2*Math.PI/N;
+    skinG.innerHTML=''; var start=-Math.PI/2, step=2*Math.PI/N;
     for(var i=0;i<N;i++){
       var a0=start+i*step,a1=start+(i+1)*step,p0=polar(a0),p1=polar(a1);
       var d="M"+CX+" "+CY+" L"+p0.x.toFixed(1)+" "+p0.y.toFixed(1)+" A"+R+" "+R+" 0 0 1 "+p1.x.toFixed(1)+" "+p1.y.toFixed(1)+" Z";
       var w=document.createElementNS(SVGNS,'path');
-      w.setAttribute('d',d);w.setAttribute('fill','var(--orange)');
-      w.setAttribute('stroke','var(--orange-d)');w.setAttribute('stroke-width','1.3');
-      w.setAttribute('class','wedge');w.dataset.mid=((a0+a1)/2).toFixed(4);
-      skin.appendChild(w);
+      w.setAttribute('d',d); w.setAttribute('class','wedge'); w.dataset.mid=((a0+a1)/2).toFixed(4);
+      skinG.appendChild(w);
     }
+    var sh=document.createElementNS(SVGNS,'ellipse');
+    sh.setAttribute('class','shine');sh.setAttribute('cx','74');sh.setAttribute('cy','76');sh.setAttribute('rx','16');sh.setAttribute('ry','9');
+    sh.setAttribute('transform','rotate(-35 74 76)');sh.style.transition='opacity .2s';
+    skinG.appendChild(sh);
     remaining=N;
   }
   var MOUTHS={happy:"M84 126 Q100 138 116 126",neutral:"M86 130 L114 130",
@@ -522,38 +834,168 @@
     brows.style.opacity=(s==='worried'||s==='sad'||s==='cry')?1:0;
     tear.style.opacity=(s==='cry')?1:0;}
   function faceFor(p){return p<=0?'happy':p<=3?'neutral':p<=6?'worried':p<=9?'sad':'cry';}
-  var quips=["Skrællet. Tak for kampen.","Færdig. Den nåede ikke at sige farvel.",
-    "Endnu en. Den så det ikke komme.","Pillet. Helt og aldeles.","Sådan. Næste."];
-  var milestones={1:"Én skrællet. Den havde planer.",3:"Tre. Det er ikke et problem. Det er en hobby.",
-    5:"Fem. Hænderne lugter. Det ved du godt.",10:"Ti stykker. Det er rigeligt nu. Det er det ikke.",
-    25:"Femogtyve. Et helt net. Imponerende, og en smule bekymrende.",50:"Halvtreds. Gå udenfor. Tag en med.",
-    100:"Hundrede. Du er nu en del af clementinhistorien. Ingen vil huske det.",
-    250:"Tohundredeoghalvtreds. Selv Jule-Jørgen ville bede dig om at slappe af.",
-    500:"Femhundrede. Spillet er forbi. Du har vundet. (Det er det ikke.)"};
   function setStatus(t){statusEl.style.opacity=0;setTimeout(function(){statusEl.textContent=t;statusEl.style.opacity=1;},150);}
+  function bump(n){countEl.textContent=fmt(n);countEl.classList.remove('bump');void countEl.offsetWidth;countEl.classList.add('bump');}
   function floatPlus(){var s=document.createElement('span');s.className='plus';s.textContent='+1';
     stage.appendChild(s);setTimeout(function(){s.remove();},850);}
+  function burst(){
+    if(reduced||!stage.animate)return;
+    var c=getComputedStyle(gameSvg).getPropertyValue('--peel').trim()||'#F07F1A';
+    for(var i=0;i<14;i++){
+      var b=document.createElement('i'); b.className='bit'; b.style.background=c; stage.appendChild(b);
+      var a=Math.random()*Math.PI*2, dist=80+Math.random()*70, rot=(Math.random()*720-360)|0;
+      b.animate([{transform:'translate(-50%,-50%) rotate(0deg)',opacity:1},
+        {transform:'translate(calc(-50% + '+(Math.cos(a)*dist).toFixed(0)+'px), calc(-50% + '+(Math.sin(a)*dist+40).toFixed(0)+'px)) rotate('+rot+'deg)',opacity:0}],
+        {duration:650+Math.random()*350,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=(function(el){return function(){el.remove();};})(b);
+    }
+  }
   function peelOne(){
-    var wedges=skin.querySelectorAll('.wedge:not(.gone)');if(!wedges.length)return;
+    var wedges=skinG.querySelectorAll('.wedge:not(.gone)');if(!wedges.length)return;
+    var sh=skinG.querySelector('.shine'); if(sh)sh.style.opacity=0;
     var w=wedges[Math.floor(Math.random()*wedges.length)];w.classList.add('gone');
     var mid=parseFloat(w.dataset.mid),dx=Math.cos(mid)*64,dy=Math.sin(mid)*64;
     w.style.transform='translate('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px) scale(.35) rotate('+(mid*30).toFixed(0)+'deg)';
     w.style.opacity='0';setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w);},520);remaining--;
   }
-  function finish(){
-    locked=true;setFace('cry');count++;
-    countEl.textContent=count.toLocaleString('da-DK');
-    countEl.classList.remove('bump');void countEl.offsetWidth;countEl.classList.add('bump');
-    floatPlus();setVisitor();
-    setStatus(milestones[count]||quips[Math.floor(Math.random()*quips.length)]);
-    setTimeout(function(){buildSkin();setFace('happy');locked=false;},760);
+
+  /* a clementine is fully peeled: score it, time it, test the unlocks */
+  function finish(ms){
+    locked=true; setFace('cry'); burst(); floatPlus();
+    var beforeLvl=levelIdx(mem.total);
+    mem.total++; run.score++; bump(run.score);
+    run.streak = (run.lastMs && ms<run.lastMs) ? run.streak+1 : 1; run.lastMs=ms;
+    if(!mem.fast||ms<mem.fast) mem.fast=ms;
+    var ctx={score:run.score,ms:ms,streak:run.streak}, fresh=[];
+    SKINS.forEach(function(s){ if(!isOpen(s.id)&&s.test(ctx)){mem.unlocked.push(s.id);fresh.push(s);} });
+    save();
+    var msg=secs(ms)+' sek.';
+    if(run.streak>=2) msg+=' '+run.streak+' i træk, hurtigere og hurtigere.';
+    if(fresh.length){
+      var u=fresh[fresh.length-1];
+      mem.skin=u.id; save(); renderSkins(); applySkin();
+      toast('Låst op: '+u.name+'!'); msg='Låst op: '+u.name+'. Den er din nu.';
+    }else if(levelIdx(mem.total)>beforeLvl){
+      toast('Nyt niveau: '+LEVELS[levelIdx(mem.total)].t);
+    }
+    setStatus(msg); renderStats(); renderWelcome();
+    setTimeout(function(){ if(run.state==='running'){buildSkin();setFace('happy');locked=false;} },220);
   }
-  clem.addEventListener('click',function(){
-    if(locked||remaining<=0)return;peelOne();
-    var peeled=N-remaining;
-    if(remaining<=0)setTimeout(finish,420);else setFace(faceFor(peeled));
+
+  function paintTimer(left){
+    $('timerFill').style.width=(left/RUN_MS*100)+'%';
+    $('timerT').textContent=(left/1000).toFixed(1).replace('.',',')+' s';
+    $('timer').classList.toggle('low',left<5000);
+  }
+  function startRun(){
+    run.state='running'; run.score=0; run.lastMs=0; run.streak=0; run.end=performance.now()+RUN_MS; bump(0);
+    setStatus('Kør! Kør! Kør!');
+    run.t=setInterval(function(){
+      var left=Math.max(0,run.end-performance.now()); paintTimer(left);
+      if(left<=0) endRun();
+    },100);
+  }
+  function endRun(){
+    clearInterval(run.t); run.state='done'; locked=true;
+    var rec=run.score>mem.best; if(rec){mem.best=run.score;save();}
+    var msg=run.score===0?'Tiden er gået. Nul. Clementinen vandt.':
+      'Tiden er gået. '+run.score+(run.score===1?' clementin':' clementiner')+' på 30 sekunder.';
+    msg+= rec&&run.score>0 ? ' Ny rekord!' : (mem.best?' Din rekord er '+mem.best+'.':'');
+    setStatus(msg); if(rec&&run.score>0)toast('Ny rekord: '+run.score+'!');
+    setFace(run.score?'happy':'sad');
+    renderStats(); $('again').hidden=false;
+  }
+  function resetRun(){
+    clearInterval(run.t); run.state='idle'; run.score=0; paintTimer(RUN_MS);
+    $('again').hidden=true; buildSkin(); setFace('happy'); locked=false;
+    countEl.textContent='0';
+    setStatus('Klik på clementinen for at starte. Du har 30 sekunder.');
+  }
+  $('again').addEventListener('click',resetRun);
+
+  $('clem').addEventListener('click',function(){
+    if(locked||remaining<=0||run.state==='done')return;
+    if(run.state==='idle')startRun();
+    if(remaining===N) clemStart=performance.now();
+    peelOne();
+    if(remaining<=0) finish(performance.now()-clemStart);
+    else setFace(faceFor(N-remaining));
   });
-  buildSkin();setFace('happy');
+
+  buildSkin(); setFace('happy'); paintTimer(RUN_MS);
+  countEl.textContent='0';
+  statusEl.textContent = mem.total ? 'Velkommen tilbage. Klik på clementinen for at starte. Du har 30 sekunder.' : 'Klik på clementinen for at starte. Du har 30 sekunder.';
+  renderSkins(); renderStats(); applySkin();
+
+  /* ---------- CLEMENTIN-ÅRET (bars grow in, this month marked) ---------- */
+  var m=new Date().getMonth(), bars=document.querySelectorAll('.year-bars .bar'), mons=document.querySelectorAll('.year-months span');
+  bars[m].classList.add('now'); mons[m].classList.add('now');
+  bars.forEach(function(b,i){b.style.transitionDelay=(i*45)+'ms';});
+  var season=(m>=10||m===0)?'Det er høstsæson lige nu. Gå ud og køb et net.':(m===1)?'Lige nu hviler træerne. Det burde du også.':(m<=3)?'Lige nu blomstrer træerne. Tålmodighed.':(m<=8)?'Lige nu vokser de. Langsomt. Bliv ved med at vente.':'Lige nu modner de. Det er snart.';
+  $('yearNow').textContent=season;
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){$('year').classList.add('in');io.disconnect();}});},{threshold:.3});
+    io.observe($('year'));
+  }else $('year').classList.add('in');
+
+  /* ---------- QUIZ ---------- */
+  var Q=[
+    {q:'Du får et net clementiner. Hvad sker der?',a:[
+      ['Jeg deler dem ud, før jeg har taget jakken af.','baadedeleren'],
+      ['Jeg gemmer dem. Til senere. Til mig.','hamstreren'],
+      ['Jeg spiser én. Færdig.','funktionelle'],
+      ['Er det december? Ellers bliver de i butikken.','saesonpuristen']]},
+    {q:'Hvordan skræller du?',a:[
+      ['Langsomt. Helst i ét langt stykke.','skraelleren'],
+      ['Jeg fjerner også alt det hvide. Alt.','perfektionisten'],
+      ['Med tommelfingeren. Hurtigt.','funktionelle'],
+      ['Jeg skræller til de andre først.','baadedeleren']]},
+    {q:'Du finder en sten i en båd. Du…',a:[
+      ['…skriver en anmeldelse.','perfektionisten'],
+      ['…gemmer den. Den er sjælden.','hamstreren'],
+      ['…tygger forsigtigt videre.','funktionelle'],
+      ['…lægger den til side og nyder resten i ro.','skraelleren']]},
+    {q:'Hvornår smager en clementin bedst?',a:[
+      ['I december. Ikke til diskussion.','saesonpuristen'],
+      ['Når jeg har brugt ti minutter på den.','skraelleren'],
+      ['Når den bliver delt.','baadedeleren'],
+      ['Når der er flere i køleskabet.','hamstreren']]},
+    {q:'Den sidste clementin i skålen er…',a:[
+      ['…din. Tag den.','baadedeleren'],
+      ['…allerede i min taske.','hamstreren'],
+      ['…perfekt, når trådene er væk.','perfektionisten'],
+      ['…en juleting. Det er juni.','saesonpuristen']]}
+  ];
+  var qi=0, scores={}, last=null;
+  function markMine(){document.querySelectorAll('.type').forEach(function(t){t.classList.toggle('mine',t.dataset.type===mem.type);});}
+  function renderQ(){
+    $('qAsk').hidden=false; $('qResult').hidden=true;
+    var prog=''; for(var i=0;i<Q.length;i++) prog+='<i class="'+(i<qi?'on':'')+'"></i>'; $('qProg').innerHTML=prog;
+    $('qNo').textContent='Spørgsmål '+(qi+1)+' af '+Q.length;
+    $('qText').textContent=Q[qi].q;
+    var box=$('qAnswers'); box.innerHTML='';
+    Q[qi].a.forEach(function(a){
+      var b=document.createElement('button'); b.className='answer'; b.textContent=a[0];
+      b.addEventListener('click',function(){scores[a[1]]=(scores[a[1]]||0)+1;last=a[1];qi++; if(qi<Q.length)renderQ(); else finishQuiz();});
+      box.appendChild(b);
+    });
+    $('qAsk').classList.remove('q-anim'); void $('qAsk').offsetWidth; $('qAsk').classList.add('q-anim');
+  }
+  function finishQuiz(){
+    var max=0,best=null; for(var k in scores) if(scores[k]>max){max=scores[k];best=k;}
+    if(scores[last]===max) best=last;
+    mem.type=best; save(); showResult(); renderWelcome();
+    toast('Du er '+TYPES[best].name+'.');
+  }
+  function showResult(){
+    var t=TYPES[mem.type]; if(!t){startQuiz();return;}
+    $('qAsk').hidden=true; $('qResult').hidden=false;
+    $('qClem').innerHTML=clemSVG('',mem.skin,false);
+    $('qType').textContent=t.name; $('qEss').textContent=t.ess;
+    markMine();
+  }
+  function startQuiz(){qi=0;scores={};last=null;renderQ();}
+  $('qAgain').addEventListener('click',startQuiz);
+  if(mem.type&&TYPES[mem.type]) showResult(); else startQuiz();
 
   /* ---------- REVIEW SUMMARY (computed from the review blocks) ---------- */
   var rs=[].slice.call(document.querySelectorAll('#reviews .review'));
@@ -565,11 +1007,11 @@
     head.appendChild(sp);
   });
   var avg=total?sum/total:0;
-  document.getElementById('avg').textContent=avg.toLocaleString('da-DK',{minimumFractionDigits:1,maximumFractionDigits:1});
-  document.getElementById('avgStars').style.width=(avg/5*100)+'%';
-  document.getElementById('cnt').textContent=total+(total===1?' anmeldelse':' anmeldelser');
+  $('avg').textContent=avg.toLocaleString('da-DK',{minimumFractionDigits:1,maximumFractionDigits:1});
+  $('avgStars').style.width=(avg/5*100)+'%';
+  $('cnt').textContent=total+(total===1?' anmeldelse':' anmeldelser');
   var maxC=Math.max(1,counts[1],counts[2],counts[3],counts[4],counts[5]);
-  var dist=document.getElementById('dist');
+  var dist=$('dist');
   for(var s=5;s>=1;s--){
     var row=document.createElement('div');row.className='row';
     row.innerHTML='<span class="k"><b>'+s+'</b> ★</span><span class="track"><span class="fill"></span></span><span class="v">'+counts[s]+'</span>';
@@ -577,10 +1019,17 @@
     (function(fill,c){setTimeout(function(){fill.style.width=(c/maxC*100)+'%';},60);})(row.querySelector('.fill'),counts[s]);
   }
   /* ---------- REVIEW CAROUSEL controls ---------- */
-  var rv=document.getElementById('reviews');
-  function step(){var c=rv.querySelector('.review');return c?c.getBoundingClientRect().width+18:340;}
-  document.getElementById('rPrev').addEventListener('click',function(){rv.scrollBy({left:-step(),behavior:'smooth'});});
-  document.getElementById('rNext').addEventListener('click',function(){rv.scrollBy({left:step(),behavior:'smooth'});});
+  var rv=$('reviews');
+  function stepW(){var c=rv.querySelector('.review');return c?c.getBoundingClientRect().width+24:340;}
+  $('rPrev').addEventListener('click',function(){rv.scrollBy({left:-stepW(),behavior:'smooth'});});
+  $('rNext').addEventListener('click',function(){rv.scrollBy({left:stepW(),behavior:'smooth'});});
+
+  /* ---------- FORGET ME ---------- */
+  $('forget').addEventListener('click',function(){
+    if(!confirm('Glem alt? Dine skrællede clementiner, din rekord og din type bliver slettet fra denne browser.'))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    location.reload();
+  });
 })();
 </script>
 </body>
